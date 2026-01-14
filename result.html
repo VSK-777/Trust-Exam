@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Result</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .result-container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px 40px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-box {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .score-box p {
+            margin: 8px 0;
+        }
+
+        h3 {
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        ul li:last-child {
+            border-bottom: none;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="result-container">
+
+    <h2>Exam Result</h2>
+
+    <div class="score-box">
+        <p><strong>Score:</strong> <span id="score"></span> / <span id="total"></span></p>
+        <p><strong>Trust Score:</strong> <span id="trust" class="highlight"></span></p>
+    </div>
+
+    <h3>Proctoring Details</h3>
+    <ul>
+        <li>Tab Switches: <span id="tabs"></span></li>
+        <li>Window Blur: <span id="blurs"></span></li>
+        <li>No Face Detected: <span id="noface"></span></li>
+        <li>Multiple Faces Detected: <span id="multiface"></span></li>
+    </ul>
+
+</div>
+
+<script>
+    document.getElementById("score").textContent = localStorage.getItem("score");
+    document.getElementById("total").textContent = localStorage.getItem("total");
+    document.getElementById("trust").textContent = localStorage.getItem("trustScore");
+    document.getElementById("tabs").textContent = localStorage.getItem("tabSwitches");
+    document.getElementById("blurs").textContent = localStorage.getItem("windowBlurs");
+    document.getElementById("noface").textContent = localStorage.getItem("noFace");
+    document.getElementById("multiface").textContent = localStorage.getItem("multiFace");
+</script>
+
+</body>
+</html>

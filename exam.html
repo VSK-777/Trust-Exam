@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Examination</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .exam-container {
+            background-color: #ffffff;
+            max-width: 900px;
+            margin: auto;
+            padding: 30px 40px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .instructions {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .timer-box {
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #c0392b;
+            background-color: #fff3f3;
+            padding: 8px 12px;
+            border-left: 4px solid #c0392b;
+            width: fit-content;
+        }
+
+
+        .question {
+            margin-bottom: 18px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .question p {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .question input {
+            margin-right: 8px;
+        }
+
+        button {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Webcam styling */
+        #webcam {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            background-color: black;
+        }
+    </style>
+
+    <!-- MediaPipe BlazeFace -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+</head>
+
+<body>
+
+<div class="exam-container">
+
+    <div class="timer-box">
+        ⏱ Time Left: <span id="timer">30:00</span>
+    </div>
+
+    <h2>Online Examination</h2>
+    <p class="instructions">Answer all questions. Do not refresh or switch tabs.</p>
+
+    <!-- Webcam -->
+    <video id="webcam" width="320" height="240" autoplay muted></video>
+
+    <form id="examForm">
+
+        <div class="question">
+            <p>1. Java is a ___?</p>
+            <input type="radio" name="q1" value="A"> Programming Language<br>
+            <input type="radio" name="q1" value="B"> Database<br>
+            <input type="radio" name="q1" value="C"> Browser<br>
+            <input type="radio" name="q1" value="D"> OS
+        </div>
+
+    </form>
+
+    <button type="button" onclick="submitExam()">Submit Exam</button>
+
+</div>
+
+<!-- ===================== EXISTING SCRIPT (UNCHANGED) ===================== -->
+<script>
+    /* =====================================================
+       QUESTIONS
+    ===================================================== */
+    const form = document.getElementById("examForm");
+    for (let i = 2; i <= 30; i++) {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `
+            <p>${i}. Sample Question ${i}?</p>
+            <input type="radio" name="q${i}" value="A"> Option A<br>
+            <input type="radio" name="q${i}" value="B"> Option B<br>
+            <input type="radio" name="q${i}" value="C"> Option C<br>
+            <input type="radio" name="q${i}" value="D"> Option D
+        `;
+        form.appendChild(div);
+    }
+
+    /* =====================================================
+       ANSWER KEY
+    ===================================================== */
+    const correctAnswers = {
+        q1:"A", q2:"B", q3:"C", q4:"D", q5:"A",
+        q6:"B", q7:"C", q8:"D", q9:"A", q10:"B",
+        q11:"C", q12:"D", q13:"A", q14:"B", q15:"C",
+        q16:"D", q17:"A", q18:"B", q19:"C", q20:"D",
+        q21:"A", q22:"B", q23:"C", q24:"D", q25:"A",
+        q26:"B", q27:"C", q28:"D", q29:"A", q30:"B"
+    };
+
+    /* =====================================================
+       TIMER
+    ===================================================== */
+    let timeLeft = 30 * 60;
+    const timerElement = document.getElementById("timer");
+
+    setInterval(() => {
+        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const sec = String(timeLeft % 60).padStart(2, '0');
+        timerElement.textContent = `${min}:${sec}`;
+
+        if (timeLeft <= 0) submitExam();
+        timeLeft--;
+    }, 1000);
+
+    /* =====================================================
+       TRUST METRICS
+    ===================================================== */
+    let trustScore = 100;
+    let tabSwitchCount = 0;
+    let windowBlurCount = 0;
+    let noFaceCount = 0;
+    let multiFaceCount = 0;
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            tabSwitchCount++;
+            trustScore -= 5;
+        }
+    });
+
+    window.addEventListener("blur", () => {
+        windowBlurCount++;
+        trustScore -= 3;
+    });
+
+    /* =====================================================
+       BLAZEFACE
+    ===================================================== */
+    const video = document.getElementById("webcam");
+    let currentFaceCount = 0;
+
+    const faceDetection = new FaceDetection({
+        locateFile: file =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
+    });
+
+    faceDetection.setOptions({
+        model: "short",
+        minDetectionConfidence: 0.6
+    });
+
+    faceDetection.onResults(results => {
+        currentFaceCount = results.detections.length;
+    });
+
+    const camera = new Camera(video, {
+        onFrame: async () => {
+            await faceDetection.send({ image: video });
+        },
+        width: 320,
+        height: 240
+    });
+    camera.start();
+
+    setInterval(() => {
+        if (currentFaceCount === 0) {
+            noFaceCount++;
+            trustScore -= 4;
+        } else if (currentFaceCount > 1) {
+            multiFaceCount++;
+            trustScore -= 8;
+        }
+        if (trustScore < 0) trustScore = 0;
+    }, 3000);
+
+    /* =====================================================
+       SUBMIT
+    ===================================================== */
+    function submitExam() {
+        let score = 0;
+
+        for (let i = 1; i <= 30; i++) {
+            const ans = document.querySelector(`input[name="q${i}"]:checked`);
+            if (ans && ans.value === correctAnswers[`q${i}`]) score++;
+        }
+
+        localStorage.setItem("score", score);
+        localStorage.setItem("total", 30);
+        localStorage.setItem("trustScore", trustScore);
+        localStorage.setItem("tabSwitches", tabSwitchCount);
+        localStorage.setItem("windowBlurs", windowBlurCount);
+        localStorage.setItem("noFace", noFaceCount);
+        localStorage.setItem("multiFace", multiFaceCount);
+
+        alert("Exam submitted successfully");
+        window.location.href = "result.html";
+    }
+</script>
+
+</body>
+</html>

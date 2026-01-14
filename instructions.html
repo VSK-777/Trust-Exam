@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instructions</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .instructions-box {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 420px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .agree-section {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="instructions-box">
+    <h2>Exam Instructions</h2>
+
+    <ul>
+        <li>Camera must be ON throughout the examination</li>
+        <li>Only one face is allowed in front of the camera</li>
+        <li>Tab switching or minimizing the window is not allowed</li>
+        <li>Trust score will decrease on any violation</li>
+    </ul>
+
+    <div class="agree-section">
+        <input type="checkbox" id="agree">
+        <label for="agree">I have read and agree to the instructions</label>
+    </div>
+
+    <button onclick="proceed()">Proceed to Exam</button>
+</div>
+
+<script>
+    function proceed() {
+        if (!document.getElementById("agree").checked) {
+            alert("Please accept the instructions before proceeding.");
+            return;
+        }
+        window.location.href = "exam.html";
+    }
+</script>
+
+</body>
+</html>

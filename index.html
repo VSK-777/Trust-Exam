@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Online Exam</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-box {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+    <h2>Student Login</h2>
+
+    <input id="roll" type="text" placeholder="Roll Number">
+    <input id="pass" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+</div>
+
+<script>
+    function login() {
+        const rollNo = document.getElementById("roll").value;
+        const password = document.getElementById("pass").value;
+
+        if (rollNo.trim() === "" || password.trim() === "") {
+            alert("Enter Roll Number and Password");
+            return;
+        }
+
+        // DEMO MODE – bypass backend
+        localStorage.setItem("rollNo", rollNo);
+
+        alert("Login successful (Demo Mode)");
+        window.location.href = "dashboard.html";
+    }
+</script>
+
+
+</body>
+</html>
