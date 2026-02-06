@@ -2,150 +2,183 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Online Examination</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExam Pro | Online Examination</title>
 
     <style>
+        :root {
+            --bg: #f8fafc;
+            --panel: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #2563eb;
+            --danger: #dc2626;
+            --ok: #059669;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            background-color: var(--bg);
             margin: 0;
             padding: 20px;
+            color: var(--text);
         }
 
         .exam-container {
-            background-color: #ffffff;
-            max-width: 900px;
+            max-width: 980px;
             margin: auto;
-            padding: 30px 40px;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: var(--panel);
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 20px 35px rgba(15, 23, 42, 0.1);
+        }
+
+        .exam-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .meta-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .metric-card {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 13px;
+            min-width: 150px;
         }
 
         .instructions {
-            text-align: center;
+            margin: 0;
+            color: var(--muted);
             font-size: 14px;
-            margin-bottom: 20px;
-            color: #444;
         }
 
         .timer-box {
-            text-align: left;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #c0392b;
-            background-color: #fff3f3;
-            padding: 8px 12px;
-            border-left: 4px solid #c0392b;
-            width: fit-content;
+            font-weight: 700;
+            color: var(--danger);
+            background-color: #fef2f2;
+            padding: 10px 14px;
+            border-left: 4px solid var(--danger);
+            border-radius: 6px;
         }
 
-
         .question {
-            margin-bottom: 18px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            margin-bottom: 16px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
         }
 
         .question p {
-            margin-bottom: 10px;
-            font-weight: bold;
+            margin: 0 0 10px;
+            font-weight: 600;
         }
 
-        .question input {
-            margin-right: 8px;
+        .question label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
         button {
             display: block;
-            width: 200px;
-            margin: 30px auto 0;
+            width: 240px;
+            margin: 26px auto 0;
             padding: 12px;
             font-size: 16px;
-            background-color: #007bff;
+            font-weight: 600;
+            background-color: var(--accent);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Webcam styling */
         #webcam {
             position: fixed;
-            right: 20px;
-            top: 20px;
-            border: 2px solid #333;
-            border-radius: 4px;
+            right: 16px;
+            top: 16px;
+            border: 3px solid #1e293b;
+            border-radius: 12px;
             background-color: black;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.28);
         }
+
+        .status-ok { color: var(--ok); font-weight: 700; }
+        .status-risk { color: var(--danger); font-weight: 700; }
     </style>
 
-    <!-- MediaPipe BlazeFace -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 </head>
-
 <body>
 
 <div class="exam-container">
-
-    <div class="timer-box">
-        ⏱ Time Left: <span id="timer">30:00</span>
+    <div class="exam-header">
+        <div>
+            <h2>Secure Online Examination</h2>
+            <p class="instructions">Answer all questions. Switching tabs or leaving camera view will reduce Trust Score.</p>
+        </div>
+        <div class="timer-box">⏱ Time Left: <span id="timer">30:00</span></div>
     </div>
 
-    <h2>Online Examination</h2>
-    <p class="instructions">Answer all questions. Do not refresh or switch tabs.</p>
+    <div class="meta-strip">
+        <div class="metric-card">Candidate: <strong id="candidateId">-</strong></div>
+        <div class="metric-card">Answered: <strong id="answeredCount">0/30</strong></div>
+        <div class="metric-card">Trust Score: <strong id="trustLive" class="status-ok">100</strong></div>
+    </div>
 
-    <!-- Webcam -->
     <video id="webcam" width="320" height="240" autoplay muted></video>
 
     <form id="examForm">
-
         <div class="question">
             <p>1. Java is a ___?</p>
-            <input type="radio" name="q1" value="A"> Programming Language<br>
-            <input type="radio" name="q1" value="B"> Database<br>
-            <input type="radio" name="q1" value="C"> Browser<br>
-            <input type="radio" name="q1" value="D"> OS
+            <label><input type="radio" name="q1" value="A"> Programming Language</label>
+            <label><input type="radio" name="q1" value="B"> Database</label>
+            <label><input type="radio" name="q1" value="C"> Browser</label>
+            <label><input type="radio" name="q1" value="D"> OS</label>
         </div>
-
     </form>
 
     <button type="button" onclick="submitExam()">Submit Exam</button>
-
 </div>
 
-<!-- ===================== EXISTING SCRIPT (UNCHANGED) ===================== -->
 <script>
-    /* =====================================================
-       QUESTIONS
-    ===================================================== */
     const form = document.getElementById("examForm");
+    const answeredCountElement = document.getElementById("answeredCount");
+    const trustLiveElement = document.getElementById("trustLive");
+    document.getElementById("candidateId").textContent = localStorage.getItem("rollNo") || "Unknown";
+
     for (let i = 2; i <= 30; i++) {
         const div = document.createElement("div");
         div.className = "question";
         div.innerHTML = `
             <p>${i}. Sample Question ${i}?</p>
-            <input type="radio" name="q${i}" value="A"> Option A<br>
-            <input type="radio" name="q${i}" value="B"> Option B<br>
-            <input type="radio" name="q${i}" value="C"> Option C<br>
-            <input type="radio" name="q${i}" value="D"> Option D
+            <label><input type="radio" name="q${i}" value="A"> Option A</label>
+            <label><input type="radio" name="q${i}" value="B"> Option B</label>
+            <label><input type="radio" name="q${i}" value="C"> Option C</label>
+            <label><input type="radio" name="q${i}" value="D"> Option D</label>
         `;
         form.appendChild(div);
     }
 
-    /* =====================================================
-       ANSWER KEY
-    ===================================================== */
     const correctAnswers = {
         q1:"A", q2:"B", q3:"C", q4:"D", q5:"A",
         q6:"B", q7:"C", q8:"D", q9:"A", q10:"B",
@@ -155,58 +188,59 @@
         q26:"B", q27:"C", q28:"D", q29:"A", q30:"B"
     };
 
-    /* =====================================================
-       TIMER
-    ===================================================== */
     let timeLeft = 30 * 60;
     const timerElement = document.getElementById("timer");
 
-    setInterval(() => {
-        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-        const sec = String(timeLeft % 60).padStart(2, '0');
+    const timerInterval = setInterval(() => {
+        const min = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+        const sec = String(timeLeft % 60).padStart(2, "0");
         timerElement.textContent = `${min}:${sec}`;
 
-        if (timeLeft <= 0) submitExam();
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            submitExam();
+        }
         timeLeft--;
     }, 1000);
 
-    /* =====================================================
-       TRUST METRICS
-    ===================================================== */
     let trustScore = 100;
     let tabSwitchCount = 0;
     let windowBlurCount = 0;
     let noFaceCount = 0;
     let multiFaceCount = 0;
 
+    function refreshLiveMetrics() {
+        const answered = document.querySelectorAll("input[type='radio']:checked").length;
+        answeredCountElement.textContent = `${answered}/30`;
+
+        trustLiveElement.textContent = trustScore;
+        trustLiveElement.className = trustScore >= 70 ? "status-ok" : "status-risk";
+    }
+
+    form.addEventListener("change", refreshLiveMetrics);
+
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             tabSwitchCount++;
-            trustScore -= 5;
+            trustScore = Math.max(0, trustScore - 5);
+            refreshLiveMetrics();
         }
     });
 
     window.addEventListener("blur", () => {
         windowBlurCount++;
-        trustScore -= 3;
+        trustScore = Math.max(0, trustScore - 3);
+        refreshLiveMetrics();
     });
 
-    /* =====================================================
-       BLAZEFACE
-    ===================================================== */
     const video = document.getElementById("webcam");
     let currentFaceCount = 0;
 
     const faceDetection = new FaceDetection({
-        locateFile: file =>
-            `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
+        locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
     });
 
-    faceDetection.setOptions({
-        model: "short",
-        minDetectionConfidence: 0.6
-    });
-
+    faceDetection.setOptions({ model: "short", minDetectionConfidence: 0.6 });
     faceDetection.onResults(results => {
         currentFaceCount = results.detections.length;
     });
@@ -223,17 +257,14 @@
     setInterval(() => {
         if (currentFaceCount === 0) {
             noFaceCount++;
-            trustScore -= 4;
+            trustScore = Math.max(0, trustScore - 4);
         } else if (currentFaceCount > 1) {
             multiFaceCount++;
-            trustScore -= 8;
+            trustScore = Math.max(0, trustScore - 8);
         }
-        if (trustScore < 0) trustScore = 0;
+        refreshLiveMetrics();
     }, 3000);
 
-    /* =====================================================
-       SUBMIT
-    ===================================================== */
     function submitExam() {
         let score = 0;
 
@@ -250,10 +281,11 @@
         localStorage.setItem("noFace", noFaceCount);
         localStorage.setItem("multiFace", multiFaceCount);
 
-        alert("Exam submitted successfully");
+        alert("Exam submitted successfully.");
         window.location.href = "result.html";
     }
-</script>
 
+    refreshLiveMetrics();
+</script>
 </body>
 </html>

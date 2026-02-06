@@ -2,96 +2,126 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Exam Result</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExam Pro | Result</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            background-color: #f1f5f9;
             margin: 0;
-            padding: 40px;
+            padding: 24px;
+            color: #0f172a;
         }
 
         .result-container {
             background-color: #ffffff;
-            max-width: 600px;
+            max-width: 760px;
             margin: auto;
-            padding: 30px 40px;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 20px 35px rgba(15, 23, 42, 0.11);
         }
 
-        h2 {
-            text-align: center;
+        h1 { margin-top: 0; margin-bottom: 20px; text-align: center; }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
             margin-bottom: 20px;
         }
 
-        .score-box {
+        .score-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            background: #f8fafc;
             text-align: center;
+        }
+
+        .score-card .label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .score-card .value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        h2 {
+            margin: 22px 0 10px;
             font-size: 18px;
-            margin-bottom: 25px;
-        }
-
-        .score-box p {
-            margin: 8px 0;
-        }
-
-        h3 {
-            margin-top: 25px;
-            margin-bottom: 10px;
         }
 
         ul {
             list-style: none;
             padding-left: 0;
+            margin: 0;
         }
 
-        ul li {
-            padding: 8px 0;
-            border-bottom: 1px solid #ddd;
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
             font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
         }
 
-        ul li:last-child {
-            border-bottom: none;
-        }
-
-        .highlight {
-            font-weight: bold;
-            color: #c0392b;
-        }
+        .trust-good { color: #059669; }
+        .trust-medium { color: #d97706; }
+        .trust-low { color: #dc2626; }
     </style>
 </head>
 <body>
-
 <div class="result-container">
+    <h1>Exam Performance Report</h1>
 
-    <h2>Exam Result</h2>
-
-    <div class="score-box">
-        <p><strong>Score:</strong> <span id="score"></span> / <span id="total"></span></p>
-        <p><strong>Trust Score:</strong> <span id="trust" class="highlight"></span></p>
+    <div class="score-grid">
+        <div class="score-card">
+            <div class="label">Candidate</div>
+            <div class="value" id="candidate">-</div>
+        </div>
+        <div class="score-card">
+            <div class="label">Score</div>
+            <div class="value"><span id="score"></span>/<span id="total"></span></div>
+        </div>
+        <div class="score-card">
+            <div class="label">Trust Score</div>
+            <div class="value" id="trust">-</div>
+        </div>
     </div>
 
-    <h3>Proctoring Details</h3>
+    <h2>Proctoring Violation Summary</h2>
     <ul>
-        <li>Tab Switches: <span id="tabs"></span></li>
-        <li>Window Blur: <span id="blurs"></span></li>
-        <li>No Face Detected: <span id="noface"></span></li>
-        <li>Multiple Faces Detected: <span id="multiface"></span></li>
+        <li><span>Tab Switches</span><strong id="tabs"></strong></li>
+        <li><span>Window Blur Events</span><strong id="blurs"></strong></li>
+        <li><span>No Face Detected</span><strong id="noface"></strong></li>
+        <li><span>Multiple Faces Detected</span><strong id="multiface"></strong></li>
     </ul>
-
 </div>
 
 <script>
-    document.getElementById("score").textContent = localStorage.getItem("score");
-    document.getElementById("total").textContent = localStorage.getItem("total");
-    document.getElementById("trust").textContent = localStorage.getItem("trustScore");
-    document.getElementById("tabs").textContent = localStorage.getItem("tabSwitches");
-    document.getElementById("blurs").textContent = localStorage.getItem("windowBlurs");
-    document.getElementById("noface").textContent = localStorage.getItem("noFace");
-    document.getElementById("multiface").textContent = localStorage.getItem("multiFace");
-</script>
+    const score = Number(localStorage.getItem("score") || 0);
+    const total = Number(localStorage.getItem("total") || 30);
+    const trustScore = Number(localStorage.getItem("trustScore") || 0);
 
+    document.getElementById("candidate").textContent = localStorage.getItem("rollNo") || "-";
+    document.getElementById("score").textContent = score;
+    document.getElementById("total").textContent = total;
+
+    const trustEl = document.getElementById("trust");
+    trustEl.textContent = trustScore;
+    trustEl.className = trustScore >= 75 ? "trust-good" : (trustScore >= 50 ? "trust-medium" : "trust-low");
+
+    document.getElementById("tabs").textContent = localStorage.getItem("tabSwitches") || 0;
+    document.getElementById("blurs").textContent = localStorage.getItem("windowBlurs") || 0;
+    document.getElementById("noface").textContent = localStorage.getItem("noFace") || 0;
+    document.getElementById("multiface").textContent = localStorage.getItem("multiFace") || 0;
+</script>
 </body>
 </html>
