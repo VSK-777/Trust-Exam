@@ -1,85 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login | Online Exam</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExam Pro | Candidate Login</title>
     <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1d4ed8;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #2563eb;
+            --accent-dark: #1d4ed8;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             margin: 0;
+            min-height: 100vh;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at 10% 20%, #334155 0%, var(--bg-start) 35%, var(--bg-end) 100%);
+            display: grid;
+            place-items: center;
+            padding: 24px;
         }
 
         .login-box {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 320px;
+            background-color: var(--card);
+            width: min(440px, 100%);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 24px 40px rgba(2, 6, 23, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            margin: 8px 0 24px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            margin-top: 14px;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
+            padding: 12px;
             font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            outline: none;
         }
 
         button {
             width: 100%;
-            margin-top: 20px;
-            padding: 10px;
-            font-size: 15px;
-            background-color: #007bff;
-            color: white;
+            margin-top: 22px;
+            padding: 12px;
+            border-radius: 10px;
             border: none;
-            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
             cursor: pointer;
+        }
+
+        .note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
         }
     </style>
 </head>
-
 <body>
-
 <div class="login-box">
-    <h2>Student Login</h2>
+    <span class="badge">Secure Portal</span>
+    <h1>Candidate Login</h1>
+    <p class="subtitle">Sign in to access your supervised online assessment environment.</p>
 
-    <input id="roll" type="text" placeholder="Roll Number">
-    <input id="pass" type="password" placeholder="Password">
+    <label for="roll">Roll Number</label>
+    <input id="roll" type="text" placeholder="e.g. CSE-2026-041">
 
-    <button onclick="login()">Login</button>
+    <label for="pass">Password</label>
+    <input id="pass" type="password" placeholder="Enter your exam password">
+
+    <button onclick="login()">Continue to Dashboard</button>
+    <p class="note">Demo mode is active for this prototype.</p>
 </div>
 
 <script>
     function login() {
-        const rollNo = document.getElementById("roll").value;
-        const password = document.getElementById("pass").value;
+        const rollNo = document.getElementById("roll").value.trim();
+        const password = document.getElementById("pass").value.trim();
 
-        if (rollNo.trim() === "" || password.trim() === "") {
-            alert("Enter Roll Number and Password");
+        if (!rollNo || !password) {
+            alert("Please enter both Roll Number and Password.");
             return;
         }
 
-        // DEMO MODE – bypass backend
         localStorage.setItem("rollNo", rollNo);
+        localStorage.setItem("loginTime", new Date().toISOString());
 
-        alert("Login successful (Demo Mode)");
+        alert("Login successful. Welcome to SecureExam Pro (Demo).");
         window.location.href = "dashboard.html";
     }
 </script>
-
-
 </body>
 </html>
