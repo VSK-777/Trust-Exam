@@ -1,61 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExam Pro | Dashboard</title>
     <style>
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #0ea5e9;
+            --accent-dark: #0284c7;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            height: 100vh;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 100vh;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(145deg, #e2e8f0, var(--bg));
+            display: grid;
+            place-items: center;
+            color: var(--text);
+            padding: 24px;
         }
-
         .dashboard-box {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 350px;
+            width: min(520px, 100%);
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
         }
-
-        h2 {
-            margin-bottom: 25px;
+        h1 {
+            margin: 0;
+            font-size: 28px;
         }
-
+        .meta {
+            margin: 14px 0 22px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .feature-list {
+            margin: 0 0 22px;
+            padding-left: 18px;
+            color: #334155;
+            font-size: 14px;
+        }
+        .feature-list li { margin-bottom: 8px; }
         button {
-            padding: 12px 20px;
-            font-size: 16px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
             width: 100%;
-        }
-
-        button:hover {
-            background-color: #218838;
+            border: none;
+            border-radius: 10px;
+            padding: 13px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
         }
     </style>
 </head>
 <body>
-
 <div class="dashboard-box">
-    <h2>Student Dashboard</h2>
-    <button onclick="startExam()">Start Exam</button>
+    <h1>Exam Dashboard</h1>
+    <div class="meta">
+        Candidate: <strong id="rollDisplay">Not logged in</strong><br>
+        Session Started: <span id="loginTime">-</span>
+    </div>
+
+    <ul class="feature-list">
+        <li>AI-assisted face monitoring with violation tracking.</li>
+        <li>30-minute timed section with automatic submission.</li>
+        <li>Transparent Trust Score and post-exam report.</li>
+    </ul>
+
+    <button onclick="startExam()">Start Secure Examination</button>
 </div>
 
 <script>
+    const rollNo = localStorage.getItem("rollNo") || "Not logged in";
+    const loginTime = localStorage.getItem("loginTime");
+
+    document.getElementById("rollDisplay").textContent = rollNo;
+    document.getElementById("loginTime").textContent = loginTime ? new Date(loginTime).toLocaleString() : "-";
+
     function startExam() {
+        if (!localStorage.getItem("rollNo")) {
+            alert("Please login before starting the exam.");
+            window.location.href = "index.html";
+            return;
+        }
         window.location.href = "instructions.html";
     }
 </script>
-
 </body>
 </html>

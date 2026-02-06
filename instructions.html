@@ -1,82 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Instructions</title>
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExam Pro | Instructions</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            height: 100vh;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 100vh;
+            background: #eef2ff;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: #0f172a;
         }
-
         .instructions-box {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 420px;
+            width: min(680px, 100%);
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 36px rgba(30, 41, 59, 0.15);
         }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
+        h1 {
+            margin-top: 0;
+            margin-bottom: 14px;
+            font-size: 28px;
         }
-
+        .lead {
+            margin-top: 0;
+            color: #475569;
+            font-size: 14px;
+        }
         ul {
-            margin-bottom: 20px;
+            margin: 18px 0;
             padding-left: 20px;
         }
-
-        ul li {
-            margin-bottom: 8px;
+        li {
+            margin-bottom: 10px;
             font-size: 14px;
+            color: #1e293b;
         }
-
         .agree-section {
-            margin-bottom: 20px;
+            margin: 20px 0;
             font-size: 14px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
         }
-
         button {
             width: 100%;
+            border: none;
+            border-radius: 10px;
             padding: 12px;
             font-size: 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            font-weight: 600;
+            color: #ffffff;
+            background: #2563eb;
             cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-
 <div class="instructions-box">
-    <h2>Exam Instructions</h2>
+    <h1>Examination Instructions</h1>
+    <p class="lead">Review carefully. Violations will reduce your Trust Score and will appear in the final report.</p>
 
     <ul>
-        <li>Camera must be ON throughout the examination</li>
-        <li>Only one face is allowed in front of the camera</li>
-        <li>Tab switching or minimizing the window is not allowed</li>
-        <li>Trust score will decrease on any violation</li>
+        <li>Keep your camera ON and your face fully visible throughout the exam.</li>
+        <li>Only one candidate should be present in front of the screen.</li>
+        <li>Avoid tab switching, minimizing, or clicking outside the test window.</li>
+        <li>The exam is timed for 30 minutes and auto-submits when time ends.</li>
+        <li>Answers are saved at submission and scored instantly.</li>
     </ul>
 
     <div class="agree-section">
         <input type="checkbox" id="agree">
-        <label for="agree">I have read and agree to the instructions</label>
+        <label for="agree">I understand and agree to comply with all exam rules.</label>
     </div>
 
-    <button onclick="proceed()">Proceed to Exam</button>
+    <button onclick="proceed()">Proceed to Secure Exam</button>
 </div>
 
 <script>
@@ -88,6 +92,5 @@
         window.location.href = "exam.html";
     }
 </script>
-
 </body>
 </html>
