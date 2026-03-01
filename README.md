@@ -90,9 +90,3 @@ This project is structured to support future upgrades such as:
 Sai Krishna  
 B.Tech CSE  
 Aspiring Java Full Stack Developer  
-
----
-
-## ⭐ Support
-
-If you find this project useful, consider giving it a ⭐ on GitHub.
