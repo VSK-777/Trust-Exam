@@ -1,4 +1,4 @@
-# 🧪 Trust-Exam
+# 💻 Trust-Exam
 
 An interactive **Online Examination Interface** built using HTML.  
 This repository currently contains the frontend UI pages that simulate an online exam workflow.
@@ -87,6 +87,6 @@ This project is structured to support future upgrades such as:
 
 ## 👨‍💻 Author
 
-Sai Krishna  
+VAJJHA SAI KRISHNA 
 B.Tech CSE  
 Aspiring Java Full Stack Developer  
